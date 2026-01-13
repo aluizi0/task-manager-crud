@@ -1,90 +1,164 @@
+/* (Mantenha o reset básico e body que você já tinha) */
 body {
-    background-color: #0b0b0b;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #121212;
     color: #e0e0e0;
-    font-family: 'Inter', sans-serif;
-    margin: 0; padding: 20px;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
-h1 { text-align: center; color: #00ff99; margin-bottom: 20px; }
+/* Telas */
+.screen { width: 100%; height: 100%; }
+.hidden { display: none !important; }
 
-/* Barra de Input no topo */
-.input-bar {
-    display: flex; gap: 10px; justify-content: center;
-    background: #111; padding: 20px; border-radius: 12px;
-    margin-bottom: 30px; border: 1px solid #222; flex-wrap: wrap;
+/* Login */
+.login-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+}
+.btn-google {
+    background: #fff;
+    color: #333;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 20px;
 }
 
-input, select, button {
-    padding: 12px; border-radius: 6px; border: 1px solid #333;
-    background: #000; color: #fff; outline: none;
+/* Header */
+header {
+    background-color: #1f1f1f;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #333;
 }
-button { background: #00ff99; color: #000; font-weight: bold; cursor: pointer; border: none; }
-button:hover { transform: scale(1.05); }
+.user-info { display: flex; align-items: center; gap: 10px; }
+.user-info img { width: 35px; height: 35px; border-radius: 50%; }
+.btn-logout { background: #ff4444; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
 
-/* O GRID DA SEMANA */
+/* Grid Semanal */
 .week-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr); /* 7 Colunas Iguais */
+    display: flex;
+    flex: 1;
+    overflow-x: auto; /* Permite rolagem lateral no mobile */
     gap: 10px;
-    width: 100%;
+    padding: 10px;
 }
 
-/* Estilo de cada Coluna */
 .day-column {
-    background: #111; border: 1px solid #222; border-radius: 8px;
-    min-height: 400px; display: flex; flex-direction: column;
+    background-color: #1a1a1a;
+    min-width: 200px; /* Tamanho fixo para mobile rolar */
+    flex: 1;
+    border-radius: 8px;
+    border: 1px solid #333;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 10px;
 }
 
 .day-column h3 {
-    text-align: center; background: #1a1a1a; margin: 0; padding: 10px;
-    border-bottom: 1px solid #00ff99; font-size: 0.9rem; text-transform: uppercase;
+    text-align: center;
+    border-bottom: 2px solid #00ff99;
+    padding: 10px 0;
+    margin: 0;
+    font-size: 0.9rem;
+    color: #00ff99;
+    text-transform: uppercase;
 }
 
-.tasks-container { padding: 10px; flex-grow: 1; }
+.task-list {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
 
-/* O Cartão da Tarefa dentro da coluna */
+/* Botão + Redondo */
+.btn-add-slot {
+    background-color: #00ff99;
+    color: #000;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    align-self: center; /* Centraliza na coluna */
+    transition: transform 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0, 255, 153, 0.2);
+}
+.btn-add-slot:hover { transform: scale(1.1); }
+
+/* Cartão de Tarefa */
 .task-card {
-    background: #222; padding: 10px; margin-bottom: 8px; border-radius: 6px;
-    border-left: 3px solid #00ff99; position: relative;
+    background-color: #2d2d2d;
+    padding: 10px;
+    border-radius: 6px;
+    border-left: 4px solid #00ff99;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
-.task-time { font-size: 0.75rem; color: #00ff99; font-weight: bold; display: block; margin-bottom: 4px; }
-.task-name { font-size: 0.9rem; word-wrap: break-word; }
+.task-info { display: flex; flex-direction: column; }
+.task-time { font-size: 0.8rem; color: #aaa; font-weight: bold; }
+.task-name { font-size: 1rem; color: #fff; }
 
-.btn-delete-mini {
-    position: absolute; top: 5px; right: 5px;
-    color: #ff4444; background: none; border: none; cursor: pointer; padding: 0;
+.task-actions { display: flex; gap: 5px; }
+.btn-icon {
+    background: none; border: none; cursor: pointer; color: #666; transition: color 0.2s;
 }
+.btn-icon:hover { color: #fff; }
+.btn-delete:hover { color: #ff4444; }
+.btn-copy:hover { color: #00ff99; }
 
-/* Responsivo para Celular (Vira lista um embaixo do outro) */
-@media (max-width: 1000px) {
-    .week-grid { grid-template-columns: 1fr; } /* 1 coluna só */
+/* MODAL */
+.modal {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: flex; justify-content: center; align-items: center;
+    z-index: 1000;
 }
+.modal-content {
+    background: #252525;
+    padding: 25px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 350px;
+    border: 1px solid #333;
+}
+.modal-content h3 { margin-top: 0; color: #00ff99; text-align: center; }
+.input-dark {
+    width: 100%; padding: 12px; margin: 8px 0 20px 0;
+    background: #1a1a1a; border: 1px solid #444;
+    color: #fff; border-radius: 6px; box-sizing: border-box;
+    font-size: 1rem;
+}
+.modal-actions { display: flex; justify-content: space-between; gap: 10px; }
+.modal-actions button { flex: 1; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+.btn-confirm { background: #00ff99; color: #000; }
+.btn-cancel { background: #444; color: #fff; }
 
-/* Classes Utilitárias */
-.hidden { display: none !important; }
-
-/* Tela de Login Centralizada */
-.login-container {
-    height: 100vh; display: flex; flex-direction: column;
-    justify-content: center; align-items: center; text-align: center;
+/* Botão Colar Especial */
+.btn-paste {
+    width: 100%; background: #333; border: 1px dashed #00ff99;
+    color: #00ff99; padding: 8px; margin-bottom: 15px;
+    cursor: pointer; border-radius: 6px; font-size: 0.9rem;
 }
-.btn-google {
-    background: #fff; color: #333; font-size: 1.2rem; margin-top: 20px;
-    display: flex; align-items: center; gap: 10px; padding: 15px 30px;
-}
-.btn-google:hover { background: #f1f1f1; transform: scale(1.05); }
-
-/* Barra do Usuário (Topo) */
-.user-info {
-    position: absolute; top: 20px; right: 20px;
-    display: flex; align-items: center; gap: 10px;
-    background: #222; padding: 8px 15px; border-radius: 30px; border: 1px solid #333;
-}
-.user-info img { width: 30px; height: 30px; border-radius: 50%; }
-.user-info span { font-size: 0.9rem; color: #ccc; }
-.btn-logout { background: #ff4444; color: #fff; font-size: 0.8rem; padding: 5px 10px; }
-
-/* Ajuste Mobile */
-@media (max-width: 600px) {
-    .user-info { position: static; justify-content: center; margin-bottom: 20px; }
-}
+.btn-paste:hover { background: #2a2a2a; }

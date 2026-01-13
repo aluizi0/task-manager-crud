@@ -1,11 +1,13 @@
-// --- CONFIGURAÇÃO DO FIREBASE ---
+// --- CONFIGURAÇÃO (MANTENHA A SUA CONFIGURAÇÃO DO FIREBASE AQUI) ---
+// Cole aqui o seu const firebaseConfig = { ... } do projeto NOVO
 const firebaseConfig = {
-  apiKey: "AIzaSyBWOK0YMzg8ZKc-dIJk0xYfeuQOahoMEfQ",
-  authDomain: "task-manager-portfolio-4b57f.firebaseapp.com",
-  projectId: "task-manager-portfolio-4b57f",
-  storageBucket: "task-manager-portfolio-4b57f.firebasestorage.app",
-  messagingSenderId: "379822677100",
-  appId: "1:379822677100:web:c2d5f4a736f8b30a46cc49"
+  apiKey: "AIzaSyC_3_0I53wPsUx99OjIx1UvkIwOWBrW5pA",
+  authDomain: "planify-aluizi0.firebaseapp.com",
+  projectId: "planify-aluizi0",
+  storageBucket: "planify-aluizi0.firebasestorage.app",
+  messagingSenderId: "1011202181166",
+  appId: "1:1011202181166:web:33ad0bc03bc293821e77bf",
+  measurementId: "G-XSYCSGREDZ"
 };
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
@@ -19,73 +21,75 @@ const provider = new GoogleAuthProvider();
 
 let currentUser = null;
 let unsubscribe = null;
+let copiedTaskData = null; // Memória temporária para o Copiar/Colar
 
-// --- 1. SISTEMA DE LOGIN/LOGOUT ---
+// --- 1. AUTENTICAÇÃO ---
 
 document.getElementById('btnLogin').addEventListener('click', async () => {
-    try {
-        await signInWithPopup(auth, provider);
-    } catch (e) {
-        console.error("Erro login:", e);
-        alert("Erro ao entrar: " + e.message);
-    }
+    try { await signInWithPopup(auth, provider); } 
+    catch (e) { alert("Erro: " + e.message); }
 });
 
 document.getElementById('btnLogout').addEventListener('click', () => {
-    if (unsubscribe) unsubscribe(); // Para de ouvir o banco antes de sair
-    signOut(auth).then(() => {
-        window.location.reload();
-    });
+    signOut(auth).then(() => window.location.reload());
 });
 
-// MONITOR DE ESTADO (Auth Listener)
 onAuthStateChanged(auth, (user) => {
-    const loginScreen = document.getElementById('login-screen');
-    const appScreen = document.getElementById('app-screen');
-
     if (user) {
-        // --- LOGADO ---
         currentUser = user;
-        
-        loginScreen.classList.add('hidden');
-        appScreen.classList.remove('hidden');
-
-        // UI Updates
-        const userPhoto = document.getElementById('userPhoto');
-        const userName = document.getElementById('userName');
-        if(userPhoto) userPhoto.src = user.photoURL;
-        if(userName) userName.innerText = user.displayName ? user.displayName.split(' ')[0] : 'Usuário';
-
-        // Carrega dados protegidos
+        document.getElementById('login-screen').classList.add('hidden');
+        document.getElementById('app-screen').classList.remove('hidden');
+        document.getElementById('userPhoto').src = user.photoURL;
+        document.getElementById('userName').innerText = user.displayName.split(' ')[0];
         loadUserTasks(user.uid);
-
     } else {
-        // --- DESLOGADO ---
         currentUser = null;
-        if (unsubscribe) unsubscribe();
-        
-        loginScreen.classList.remove('hidden');
-        appScreen.classList.add('hidden');
+        document.getElementById('login-screen').classList.remove('hidden');
+        document.getElementById('app-screen').classList.add('hidden');
     }
 });
 
-// --- 2. FUNÇÕES DO BANCO DE DADOS (SEGURANÇA APLICADA) ---
+// --- 2. SISTEMA DE MODAL (ABRIR/FECHAR) ---
+
+// Torna as funções acessíveis no HTML
+window.openModal = (day) => {
+    document.getElementById('taskModal').classList.remove('hidden');
+    document.getElementById('modalDay').value = day;
+    document.getElementById('modalTitle').innerText = `Adicionar em: ${day.toUpperCase()}`;
+    
+    // Verifica se tem algo copiado para mostrar o botão "Colar"
+    const btnPaste = document.getElementById('btnPaste');
+    if (copiedTaskData) {
+        btnPaste.classList.remove('hidden');
+        document.getElementById('pastePreview').innerText = copiedTaskData.atividade;
+    } else {
+        btnPaste.classList.add('hidden');
+    }
+    
+    // Foca no input de hora
+    document.getElementById('modalTime').focus();
+};
+
+window.closeModal = () => {
+    document.getElementById('taskModal').classList.add('hidden');
+    // Limpa os campos
+    document.getElementById('modalTime').value = "";
+    document.getElementById('modalTask').value = "";
+};
+
+// --- 3. LÓGICA DO BANCO DE DADOS ---
 
 function loadUserTasks(uid) {
-    // IMPORTANTE: Esta query exige um "Índice Composto" no Firebase
-    // Se der erro no console, clique no link que aparecerá lá para criar o índice.
     const q = query(
         collection(db, "cronograma"), 
-        where("uid", "==", uid),  // Filtra apenas tarefas deste usuário
-        orderBy("hora")           // Ordena por horário
+        where("uid", "==", uid), 
+        orderBy("hora")
     );
 
     unsubscribe = onSnapshot(q, (snapshot) => {
-        // Limpa as colunas antes de renderizar
-        const dias = ['seg','ter','qua','qui','sex','sab','dom'];
-        dias.forEach(d => {
-            const el = document.getElementById(`list-${d}`);
-            if(el) el.innerHTML = "";
+        // Limpa as colunas
+        ['seg','ter','qua','qui','sex','sab','dom'].forEach(d => {
+            document.getElementById(`list-${d}`).innerHTML = "";
         });
 
         snapshot.forEach((docSnap) => {
@@ -94,86 +98,124 @@ function loadUserTasks(uid) {
             
             const card = document.createElement('div');
             card.className = 'task-card';
-            // Adicionamos data-id para facilitar manipulação se necessário
-            card.setAttribute('data-id', id); 
-            
             card.innerHTML = `
                 <div class="task-info">
                     <span class="task-time">${data.hora}</span>
                     <span class="task-name">${data.atividade}</span>
                 </div>
-                <button class="btn-delete-mini" onclick="deleteItem('${id}')" aria-label="Deletar tarefa">
-                    <i class="fas fa-times"></i>
-                </button>
+                <div class="task-actions">
+                    <button class="btn-icon btn-copy" onclick="copyItem('${data.hora}', '${data.atividade}')">
+                        <i class="far fa-copy"></i>
+                    </button>
+                    <button class="btn-icon btn-delete" onclick="deleteItem('${id}')">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
             `;
-
             const coluna = document.getElementById(`list-${data.dia}`);
             if(coluna) coluna.appendChild(card);
         });
-    }, (error) => {
-        console.error("Erro ao ler dados:", error);
-        if(error.message.includes("indexes")) {
-            alert("Atenção Dev: Olhe o console (F12) e clique no link do Firebase para criar o índice necessário.");
-        }
     });
 }
 
-document.getElementById('btnAdd').addEventListener('click', async () => {
-    if (!currentUser) return alert("Você precisa estar logado!");
+// Salvar Tarefa (Vindo do Modal)
+window.saveTask = async () => {
+    if (!currentUser) return;
 
-    const day = document.getElementById('dayInput').value;
-    const time = document.getElementById('timeInput').value;
-    const task = document.getElementById('taskInput').value;
+    const day = document.getElementById('modalDay').value;
+    const time = document.getElementById('modalTime').value; // Formato "HH:MM" (24h)
+    const task = document.getElementById('modalTask').value;
 
     if (!task || !time) return showToast("Preencha horário e tarefa!", "error");
 
     try {
         await addDoc(collection(db, "cronograma"), {
-            uid: currentUser.uid, // <--- CAMPO DE SEGURANÇA OBRIGATÓRIO
+            uid: currentUser.uid,
             dia: day,
             hora: time,
             atividade: task,
             criadoEm: new Date().toISOString()
         });
-        
-        document.getElementById('taskInput').value = "";
-        showToast("Tarefa agendada!");
+        showToast("Tarefa agendada com sucesso!", "success");
+        closeModal();
     } catch (e) {
-        console.error("Erro ao adicionar:", e);
-        showToast("Erro ao salvar: " + e.message, "error");
+        console.error(e);
+        showToast("Erro ao salvar", "error");
     }
-});
+};
 
-// Função Global para o OnClick do HTML
+// --- 4. FUNÇÕES DE COPIAR E COLAR ---
+
+// Copiar (Salva na memória do JS)
+window.copyItem = (time, activity) => {
+    copiedTaskData = { hora: time, atividade: activity };
+    showToast(`Copiado: "${activity}"`, "neutral");
+    // Feedback visual poderia ser adicionado aqui
+};
+
+// Colar (Pega da memória e joga nos inputs do modal)
+window.pasteTask = () => {
+    if (copiedTaskData) {
+        document.getElementById('modalTime').value = copiedTaskData.hora;
+        document.getElementById('modalTask').value = copiedTaskData.atividade;
+        showToast("Dados colados! Clique em Salvar.", "neutral");
+    }
+};
+
+// Deletar
 window.deleteItem = async (id) => {
-    if(!currentUser) return;
-    
-    if(confirm("Deseja remover esta tarefa?")) {
+    // 1. Pergunta de segurança
+    if(confirm("Tem certeza que deseja apagar esta tarefa?")) {
         try {
+            // 2. Remove do banco de dados
             await deleteDoc(doc(db, "cronograma", id));
-            showToast("Tarefa removida.");
+            
+            // 3. MOSTRA O POPUP DE SUCESSO! 🔔
+            // O tipo "error" aqui é só para o fundo ficar vermelho (estilo visual de remoção)
+            showToast("Tarefa removida!", "delete");
+            
         } catch (e) {
             console.error("Erro ao deletar:", e);
-            showToast("Erro: Você não tem permissão.", "error");
+            showToast("Erro ao tentar remover.", "error");
         }
     }
 };
 
-const showToast = (msg, type="success") => {
-    // Verifica se a biblioteca Toastify foi carregada
+// Toastify
+// Função de Toast Personalizada
+const showToast = (msg, type = "neutral") => {
+    let bgColor, textColor;
+
+    // Configura as cores baseadas no tipo
+    if (type === "success") {
+        // ADICIONAR: Fundo Verde, Texto Branco
+        bgColor = "#00C851"; 
+        textColor = "#ffffff";
+    } else if (type === "delete" || type === "error") {
+        // DELETAR/ERRO: Fundo Vermelho, Texto Branco
+        bgColor = "#ff4444"; 
+        textColor = "#ffffff";
+    } else {
+        // OUTROS (Neutro): Fundo Branco, Texto Preto
+        bgColor = "#ffffff"; 
+        textColor = "#000000";
+    }
+
     if (typeof Toastify === 'function') {
         Toastify({ 
             text: msg, 
             duration: 3000, 
-            gravity: "bottom",
-            position: "right",
+            gravity: "bottom", 
+            position: "center",
             style: { 
-                background: type === "error" ? "#ff4444" : "#00C851",
-                borderRadius: "8px"
+                background: bgColor, 
+                color: textColor,
+                borderRadius: "8px",
+                fontWeight: "bold",
+                boxShadow: "0px 4px 10px rgba(0,0,0,0.2)" // Sombra para o fundo branco destacar
             } 
         }).showToast();
-    } else {
-        console.log("Toast:", msg); // Fallback se não tiver biblioteca
-        if(type === 'error') alert(msg);
+    } else { 
+        alert(msg); 
     }
 };

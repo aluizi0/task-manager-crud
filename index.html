@@ -3,61 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Planify</title>
-
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-    
-    <link rel="stylesheet" href="style.css">
+    <title>Planify - Rotina Inteligente</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="login-screen" class="login-container">
-        <h1>Planify</h1>
-        <p>Organize sua rotina. Seus dados salvos na nuvem.</p>
-        <button id="btnLogin" class="btn-google">
-            <i class="fab fa-google"></i> Entrar com Google
-        </button>
-    </div>
 
-    <div id="app-screen" class="container-fluid hidden">
+    <section id="login-screen" class="screen">
+        <div class="login-box">
+            <h1>Planify</h1>
+            <p>Organize sua rotina. Seus dados salvos na nuvem.</p>
+            <button id="btnLogin" class="btn-google">
+                <i class="fab fa-google"></i> Entrar com Google
+            </button>
+        </div>
+    </section>
+
+    <section id="app-screen" class="screen hidden">
         <header>
+            <h2>Cronograma Semanal</h2>
             <div class="user-info">
                 <img id="userPhoto" src="" alt="User">
                 <span id="userName">Usuário</span>
                 <button id="btnLogout" class="btn-logout">Sair</button>
             </div>
-            
-            <h1>Cronograma Semanal</h1>
-            
-            <div class="input-bar">
-                <select id="dayInput">
-                    <option value="seg">Segunda</option>
-                    <option value="ter">Terça</option>
-                    <option value="qua">Quarta</option>
-                    <option value="qui">Quinta</option>
-                    <option value="sex">Sexta</option>
-                    <option value="sab">Sábado</option>
-                    <option value="dom">Domingo</option>
-                </select>
-                <input type="time" id="timeInput" required>
-                <input type="text" id="taskInput" placeholder="Atividade (ex: Academia)" autocomplete="off">
-                <button id="btnAdd"><i class="fas fa-plus"></i></button>
-            </div>
         </header>
 
         <div class="week-grid">
-            <div class="day-column" id="col-seg"><h3>Segunda</h3><div class="tasks-container" id="list-seg"></div></div>
-            <div class="day-column" id="col-ter"><h3>Terça</h3><div class="tasks-container" id="list-ter"></div></div>
-            <div class="day-column" id="col-qua"><h3>Quarta</h3><div class="tasks-container" id="list-qua"></div></div>
-            <div class="day-column" id="col-qui"><h3>Quinta</h3><div class="tasks-container" id="list-qui"></div></div>
-            <div class="day-column" id="col-sex"><h3>Sexta</h3><div class="tasks-container" id="list-sex"></div></div>
-            <div class="day-column" id="col-sab"><h3>Sábado</h3><div class="tasks-container" id="list-sab"></div></div>
-            <div class="day-column" id="col-dom"><h3>Domingo</h3><div class="tasks-container" id="list-dom"></div></div>
+            <div class="day-column">
+                <h3>SEGUNDA</h3>
+                <div id="list-seg" class="task-list"></div>
+                <button class="btn-add-slot" onclick="openModal('seg')"><i class="fas fa-plus"></i></button>
+            </div>
+            <div class="day-column">
+                <h3>TERÇA</h3>
+                <div id="list-ter" class="task-list"></div>
+                <button class="btn-add-slot" onclick="openModal('ter')"><i class="fas fa-plus"></i></button>
+            </div>
+            <div class="day-column">
+                <h3>QUARTA</h3>
+                <div id="list-qua" class="task-list"></div>
+                <button class="btn-add-slot" onclick="openModal('qua')"><i class="fas fa-plus"></i></button>
+            </div>
+            <div class="day-column">
+                <h3>QUINTA</h3>
+                <div id="list-qui" class="task-list"></div>
+                <button class="btn-add-slot" onclick="openModal('qui')"><i class="fas fa-plus"></i></button>
+            </div>
+            <div class="day-column">
+                <h3>SEXTA</h3>
+                <div id="list-sex" class="task-list"></div>
+                <button class="btn-add-slot" onclick="openModal('sex')"><i class="fas fa-plus"></i></button>
+            </div>
+            <div class="day-column">
+                <h3>SÁBADO</h3>
+                <div id="list-sab" class="task-list"></div>
+                <button class="btn-add-slot" onclick="openModal('sab')"><i class="fas fa-plus"></i></button>
+            </div>
+            <div class="day-column">
+                <h3>DOMINGO</h3>
+                <div id="list-dom" class="task-list"></div>
+                <button class="btn-add-slot" onclick="openModal('dom')"><i class="fas fa-plus"></i></button>
+            </div>
+        </div>
+    </section>
+
+    <div id="taskModal" class="modal hidden">
+        <div class="modal-content">
+            <h3 id="modalTitle">Nova Atividade</h3>
+            
+            <button id="btnPaste" class="btn-paste hidden" onclick="pasteTask()">
+                <i class="fas fa-paste"></i> Colar: <span id="pastePreview">...</span>
+            </button>
+
+            <input type="hidden" id="modalDay">
+            
+            <label>Horário (24h)</label>
+            <input type="time" id="modalTime" class="input-dark">
+            
+            <label>Atividade</label>
+            <input type="text" id="modalTask" placeholder="Ex: Academia" class="input-dark" autocomplete="off">
+            
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+                <button class="btn-confirm" onclick="saveTask()">Salvar</button>
+            </div>
         </div>
     </div>
 
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script type="module" src="script.js"></script>
 </body>
