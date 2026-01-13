@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD Task Manager</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Gerenciador de Tarefas</h1>
+            <p>Projeto CRUD com Firebase</p>
+        </header>
+
+        <div class="input-group">
+            <input type="text" id="taskInput" placeholder="Digite uma nova tarefa...">
+            <button id="btnAdd"><i class="fas fa-plus"></i></button>
+        </div>
+
+        <ul id="taskList" class="task-list">
+            <li class="loading">Carregando dados...</li>
+        </ul>
+    </div>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>
