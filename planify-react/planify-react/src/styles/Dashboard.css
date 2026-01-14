@@ -74,7 +74,7 @@
     /* 👇 1fr faz o cronograma ocupar TODO o espaço sobrando. 240px reduzido para o timer. */
     grid-template-columns: 1fr 240px; 
     
-    grid-template-rows: 1fr 150px;
+    grid-template-rows: 1fr 300px;
     grid-template-areas: 
         "schedule timer"
         "notes notes";
@@ -183,20 +183,39 @@
 /* --- SEÇÃO 3: NOTAS (Rodapé) --- */
 .notes-section {
     grid-area: notes;
-    height: 100%; min-height: 0;
+    height: 100%; 
+    min-height: 0;
 }
 
 .notes-card {
-    height: 100%; padding: 20px;
-    display: flex; flex-direction: column;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    gap: 12px;
 }
 
-.notes-card h3 { color: #555; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; margin-bottom: 10px; }
+.notes-card h3 { 
+    color: #555; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; margin-bottom: 10px; 
+}
 
+/* 👇 CAMPO DE TEXTO TRANSPARENTE E SEM BORDA */
 .notes-input {
     flex: 1;
-    background: #151515; border: 1px solid #222; border-radius: 8px;
-    padding: 15px; color: #eee;
-    resize: none; outline: none; font-family: inherit; font-size: 0.9rem;
+    background: transparent; /* Remove o fundo */
+    border: none; /* Remove a borda quadrada de dentro */
+    border-radius: 0;
+    
+    padding: 0; 
+    color: #eee;
+    resize: none; 
+    outline: none; 
+    font-family: inherit; font-size: 0.95rem; line-height: 1.5;
 }
-.notes-input:focus { border-color: #555; background: #1a1a1a; }
+
+/* Garante que não apareça borda nem quando clica */
+.notes-input:focus { 
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}

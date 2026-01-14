@@ -13,3 +13,13 @@ body {
 h1, h2, h3, button {
   font-family: 'Poppins', sans-serif;
 }
+
+/* Estilo para input type="time" */
+input[type="time"] {
+  color-scheme: dark;
+}
+
+input[type="time"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  cursor: pointer;
+}

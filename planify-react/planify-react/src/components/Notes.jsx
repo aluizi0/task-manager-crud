@@ -37,17 +37,14 @@ export function Notes({ userId }) {
 
   return (
     <div className="notes-card">
-      <div style={{display:'flex', justifyContent:'space-between'}}>
-        <h3>Anotações Importantes</h3>
-        <span style={{fontSize:'0.7rem', color:'#00ff99'}}>{status}</span>
-      </div>
+      <h3>Anotações Importantes</h3>
       
       <textarea 
         className="notes-input"
         placeholder="Escreva suas ideias... (Salva automático ao clicar fora)"
         value={note}
         onChange={(e) => setNote(e.target.value)}
-        onBlur={handleBlur} // <--- O segredo está aqui
+        onBlur={handleBlur}
       ></textarea>
     </div>
   );

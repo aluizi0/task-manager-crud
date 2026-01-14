@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { FaPlay, FaPause, FaRedo, FaPen } from 'react-icons/fa';
+import { FaPlay, FaPause, FaRedo, FaClock } from 'react-icons/fa';
 
 export function FocusTimer() {
-  const [minutes, setMinutes] = useState(25);
+  const [minutes, setMinutes] = useState(5);
   const [seconds, setSeconds] = useState(0);
   const [isActive, setIsActive] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [editValue, setEditValue] = useState(25);
+  const [editValue, setEditValue] = useState(5);
+  const [dragStart, setDragStart] = useState(null);
 
   useEffect(() => {
     let interval = null;
@@ -42,6 +43,7 @@ export function FocusTimer() {
   const handleEditClick = () => {
     setIsEditing(true);
     setEditValue(minutes);
+    setDragStart(null);
   };
 
   const handleEditChange = (e) => {
@@ -50,8 +52,8 @@ export function FocusTimer() {
 
   const handleEditSave = () => {
     setIsEditing(false);
-    const newMin = parseInt(editValue) || 25;
-    setMinutes(newMin);
+    const newMin = parseInt(editValue) || 5;
+    setMinutes(Math.max(1, Math.min(99, newMin)));
     setSeconds(0);
     setIsActive(false);
   };
@@ -60,13 +62,37 @@ export function FocusTimer() {
     if (e.key === 'Enter') handleEditSave();
   };
 
+  const handleMouseDown = (e) => {
+    setDragStart(e.clientY);
+  };
+
+  const handleMouseMove = (e) => {
+    if (dragStart === null || !isEditing) return;
+    const delta = dragStart - e.clientY;
+    const step = Math.floor(delta / 10);
+    if (step !== 0) {
+      const newValue = parseInt(editValue) + step;
+      setEditValue(Math.max(1, Math.min(99, newValue)));
+      setDragStart(e.clientY);
+    }
+  };
+
+  const handleMouseUp = () => {
+    setDragStart(null);
+  };
+
   return (
     <div className="timer-container">
       <h3 className="timer-label">Tempo de Foco</h3>
       
       <div className="timer-wrapper">
         {isEditing ? (
-          <div className="timer-edit-box">
+          <div 
+            className="timer-edit-box"
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseUp}
+          >
             <input 
               type="number" 
               className="timer-input-edit"
@@ -74,19 +100,22 @@ export function FocusTimer() {
               onChange={handleEditChange}
               onBlur={handleEditSave}
               onKeyDown={handleKeyDown}
+              onMouseDown={handleMouseDown}
               autoFocus
+              style={{ cursor: 'ns-resize' }}
             />
             <span className="timer-unit">min</span>
-            <button onClick={handleEditSave} className="btn-ok">OK</button>
           </div>
         ) : (
-          <div className="timer-display-group">
+          <div 
+            className="timer-display-group" 
+            onClick={handleEditClick} 
+            style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}
+          >
+            <FaClock size={20} color="#fff" />
             <span className="timer-display">
               {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
             </span>
-            <button onClick={handleEditClick} className="btn-edit-timer">
-              <FaPen size={12} />
-            </button>
           </div>
         )}
       </div>
