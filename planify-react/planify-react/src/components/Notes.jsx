@@ -46,6 +46,7 @@ export function Notes({ userId }) {
 
   return (
     <>  
+        <h3 className="notes-title">Anotações</h3>
         {/* Área de texto transparente */}
         <textarea
             className="notes-input"

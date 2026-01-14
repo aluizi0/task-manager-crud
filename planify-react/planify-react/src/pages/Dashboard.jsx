@@ -40,9 +40,9 @@ export function Dashboard({ user, onLogout }) {
         "#1F618D", // 04h - Azul Escuro
         "#154360", // 05h - Azul Marinho
         "#117864", // 06h - Verde Petróleo
-        "#0E6251", // 07h - Verde Floresta Profundo
+        "#094639", // 07h - Verde Floresta Profundo
         "#ffffff", // 08h - Verde Escuro
-        "#145A32", // 09h - Verde Musgo
+        "#3ed17e", // 09h - Verde Musgo
         "#7D6608", // 10h - Ocre Escuro
         "#7E5109", // 11h - Dourado Queimado
         "#784212", // 12h - Marrom Avermelhado
