@@ -5,27 +5,27 @@
     height: 100vh;
     width: 100vw;
     background-color: #050505;
-    padding: 20px 20px 20px 60px;
+    /* 👇 AQUI: Padding igual em todos os lados para ficar centralizado e cheio */
+    padding: 24px; 
     color: #fff;
     font-family: 'Inter', sans-serif;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-    overflow: hidden;
+    overflow: hidden; /* Trava a rolagem da página */
 }
 
 /* --- HEADER --- */
 .dashboard-header {
-    height: 70px;
+    height: 60px;
     flex-shrink: 0;
     width: 100%;
-    max-width: 1450px;
+    /* 👇 REMOVIDO O MAX-WIDTH para ocupar a tela toda */
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
-    padding: 0 20px;
+    /* Removemos padding lateral extra pois o container já tem */
+    padding-bottom: 10px;
     border-bottom: 1px solid #222;
 }
 
@@ -33,228 +33,125 @@
     display: flex; 
     align-items: center; 
     gap: 15px;
-    justify-content: center;
 }
 
 .user-avatar { 
-    width: 40px; 
-    height: 40px; 
+    width: 44px; height: 44px; 
     border-radius: 50%; 
     border: 2px solid #333;
     object-fit: cover;
 }
 
-.greeting { 
-    font-size: 0.8rem; 
-    color: #888; 
-    display: block;
-    text-align: center;
-}
-
-.dashboard-header h2 { 
-    font-size: 1.2rem; 
-    margin: 0; 
-    font-weight: 700;
-    text-align: center;
-}
+.greeting { font-size: 0.85rem; color: #888; display: block; }
+.dashboard-header h2 { font-size: 1.25rem; margin: 0; font-weight: 700; color: #fff; }
 
 .btn-logout {
-    background: #111;
-    border: 1px solid #333;
-    color: #aaa;
-    padding: 8px 16px;
-    border-radius: 6px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: 0.3s;
+    background: #111; border: 1px solid #333; color: #aaa;
+    padding: 8px 16px; border-radius: 6px; cursor: pointer;
+    display: flex; align-items: center; gap: 8px; transition: 0.3s;
 }
+.btn-logout:hover { border-color: #fff; color: #fff; }
 
-.btn-logout:hover {
-    border-color: #fff;
-    color: #fff;
-}
-
-/* --- Orbs Atmosféricas de Fundo --- */
+/* --- ORBS (Fundo) --- */
 .orb {
-    position: fixed;
-    border-radius: 50%;
-    filter: blur(100px);
-    z-index: 0;
-    opacity: 0.1;
-    pointer-events: none;
+    position: fixed; border-radius: 50%; filter: blur(100px);
+    z-index: 0; opacity: 0.1; pointer-events: none;
 }
-
-.orb-1 {
-    width: 300px;
-    height: 300px;
-    background: #ffffff;
-    top: 10%;
-    left: 10%;
-}
-
-.orb-2 {
-    width: 400px;
-    height: 400px;
-    background: #333333;
-    bottom: 5%;
-    right: 10%;
-}
-
-.orb-3 {
-    width: 350px;
-    height: 350px;
-    background: #666666;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
+.orb-1 { width: 300px; height: 300px; background: #ffffff; top: -50px; left: -50px; }
+.orb-2 { width: 400px; height: 400px; background: #333333; bottom: -50px; right: -50px; }
 
 
-/* --- O GRID MÁGICO (AQUI ESTÁ A CORREÇÃO) --- */
+/* --- O GRID MÁGICO (AJUSTADO PARA TELA CHEIA) --- */
 .main-grid {
     display: grid;
     width: 100%;
-    max-width: 1450px;
-    height: calc(100vh - 140px);
-    gap: 16px;
-    grid-template-columns: 1.8fr 280px;
-    grid-template-rows: 1fr 180px;
+    /* 👇 REMOVIDO O MAX-WIDTH para preencher a direita */
+    
+    /* Altura = Tela inteira - Header - Padding */
+    height: calc(100vh - 120px); 
+    gap: 20px;
+    
+    /* 👇 1fr faz o cronograma ocupar TODO o espaço sobrando. 240px reduzido para o timer. */
+    grid-template-columns: 1fr 240px; 
+    
+    grid-template-rows: 1fr 120px;
     grid-template-areas: 
         "schedule timer"
         "notes notes";
 }
 
 
-/* --- ESTILO VISUAL DOS CARDS (Vidro Limpo) --- */
+/* --- ESTILO VISUAL DOS CARDS --- */
 .glass-panel, .day-column, .focus-card, .notes-card {
-    background: #0F0F0F; /* Fundo escuro quase preto */
-    border: 1px solid #222; /* Borda cinza chumbo */
+    background: #0F0F0F; 
+    border: 1px solid #222; 
     border-radius: 12px;
     position: relative;
-    /* Isso garante que um não entre na frente do outro */
     z-index: 1; 
 }
 
 
-/* --- SEÇÃO 1: CRONOGRAMA (Esquerda) --- */
+/* --- SEÇÃO 1: CRONOGRAMA --- */
 .schedule-section {
     grid-area: schedule;
     min-height: 0;
     display: flex;
     flex-direction: column;
-    background: transparent;
-    border: none;
+    background: transparent; border: none;
 }
 
 .week-grid {
     display: flex;
-    gap: 12px;
+    gap: 12px; /* Espaço entre as colunas dos dias */
     height: 100%;
-    overflow-x: auto; /* Rolagem horizontal se precisar */
+    width: 100%;
+    overflow-x: auto; 
     padding-bottom: 5px;
 }
 
 .day-column {
-    flex: 1;
-    min-width: 140px; /* Largura mínima da coluna */
+    flex: 1; /* Faz os dias dividirem o espaço igualmente */
+    min-width: 130px; 
     display: flex; flex-direction: column; padding: 12px;
 }
 .day-column:hover { border-color: #444; }
 
 .day-title { text-align: center; font-size: 0.75rem; font-weight: 800; color: #555; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; }
+
 .task-list { flex: 1; overflow-y: auto; margin-bottom: 10px; }
 .task-list::-webkit-scrollbar { width: 4px; }
 .task-list::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
 
 .task-card-item {
-    background: #1a1a1a;
-    border: 1px solid #2a2a2a;
-    padding: 10px;
-    margin-bottom: 8px;
-    border-radius: 6px;
-    font-size: 0.8rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 8px;
+    background: #1a1a1a; border: 1px solid #2a2a2a;
+    padding: 10px; margin-bottom: 8px; border-radius: 6px;
+    font-size: 0.8rem; display: flex; justify-content: space-between; align-items: center; gap: 8px;
 }
-
-.task-time {
-    font-size: 0.7rem;
-    font-weight: bold;
-    color: #aaa;
-    background: #000;
-    padding: 2px 4px;
-    border-radius: 4px;
-}
-
-.task-text {
-    flex: 1;
-    color: #ddd;
-}
-
-.task-actions {
-    display: flex;
-    gap: 8px;
-}
-
-.btn-action {
-    background: none;
-    border: none;
-    color: #888;
-    cursor: pointer;
-    padding: 4px 8px;
-    display: flex;
-    align-items: center;
-}
-
-.btn-action:hover {
-    color: #fff;
-}
-
-.empty-msg {
-    color: #555;
-    text-align: center;
-    font-size: 0.75rem;
-    padding: 20px 0;
-}
+.task-time { font-size: 0.7rem; font-weight: bold; color: #aaa; background: #000; padding: 2px 4px; border-radius: 4px; }
+.task-text { flex: 1; color: #ddd; }
+.task-actions { display: flex; gap: 4px; }
+.btn-action { background: none; border: none; color: #666; cursor: pointer; padding: 2px; }
+.btn-action:hover { color: #fff; }
 
 .btn-add {
-    background: #111;
-    border: 1px dashed #333;
-    color: #555;
-    width: 100%;
-    padding: 8px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    background: #111; border: 1px dashed #333; color: #555;
+    width: 100%; padding: 8px; border-radius: 6px; cursor: pointer;
+    font-size: 1rem; display: flex; align-items: center; justify-content: center;
 }
-
-.btn-add:hover {
-    border-color: #777;
-    color: #fff;
-}
+.btn-add:hover { border-color: #777; color: #fff; }
 
 
-/* --- SEÇÃO 2: TIMER (Direita - O Problemático) --- */
+/* --- SEÇÃO 2: TIMER (Direita Fixa) --- */
 .timer-section {
     grid-area: timer;
-    min-height: 0; /* Evita expansão infinita */
-    height: 100%; /* Força a altura da célula do grid */
+    min-height: 0; height: 100%;
 }
 
 .focus-card {
     height: 100%;
-    display: flex; 
-    flex-direction: column;
-    align-items: center;
-    justify-content: center; /* Centraliza tudo verticalmente */
-    padding: 20px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; 
+    padding: 12px;
 }
 
 .timer-label {
@@ -262,25 +159,23 @@
     font-size: 0.75rem; font-weight: 800; color: #555; text-transform: uppercase; letter-spacing: 2px;
 }
 
-/* O Relógio */
-.timer-display-group { margin-bottom: 20px; position: relative; }
-.timer-display { font-size: 4rem; font-weight: 700; color: #fff; line-height: 1; letter-spacing: -2px;}
+.timer-display-group { margin-bottom: 12px; position: relative; }
+.timer-display { font-size: 2.8rem; font-weight: 700; color: #fff; line-height: 1; letter-spacing: -2px;}
 
-/* Botões */
-.timer-controls { display: flex; align-items: center; gap: 15px; }
+.timer-controls { display: flex; align-items: center; gap: 10px; }
 
 .timer-btn-primary {
-    width: 64px; height: 64px; border-radius: 50%;
+    width: 50px; height: 50px; border-radius: 50%;
     background: #fff; color: #000; border: none;
-    font-size: 1.5rem; display: flex; align-items: center; justify-content: center;
-    cursor: pointer; box-shadow: 0 0 20px rgba(255,255,255,0.1);
+    font-size: 1.2rem; display: flex; align-items: center; justify-content: center;
+    cursor: pointer; box-shadow: 0 0 20px rgba(255,255,255,0.1); transition: transform 0.2s;
 }
 .timer-btn-primary:hover { transform: scale(1.05); }
 
 .timer-btn-secondary {
-    width: 40px; height: 40px; border-radius: 50%;
+    width: 32px; height: 32px; border-radius: 50%;
     background: transparent; border: 1px solid #333; color: #888;
-    font-size: 1rem; display: flex; align-items: center; justify-content: center; cursor: pointer;
+    font-size: 0.9rem; display: flex; align-items: center; justify-content: center; cursor: pointer;
 }
 .timer-btn-secondary:hover { border-color: #fff; color: #fff; }
 
@@ -288,13 +183,11 @@
 /* --- SEÇÃO 3: NOTAS (Rodapé) --- */
 .notes-section {
     grid-area: notes;
-    height: 100%; /* Ocupa 100% dos 180px definidos no grid */
-    min-height: 0;
+    height: 100%; min-height: 0;
 }
 
 .notes-card {
-    height: 100%;
-    padding: 20px;
+    height: 100%; padding: 20px;
     display: flex; flex-direction: column;
 }
 
@@ -302,11 +195,8 @@
 
 .notes-input {
     flex: 1;
-    background: #151515; /* Fundo levemente visível */
-    border: 1px solid #222;
-    border-radius: 8px;
-    padding: 15px;
-    color: #eee;
+    background: #151515; border: 1px solid #222; border-radius: 8px;
+    padding: 15px; color: #eee;
     resize: none; outline: none; font-family: inherit; font-size: 0.9rem;
 }
 .notes-input:focus { border-color: #555; background: #1a1a1a; }
