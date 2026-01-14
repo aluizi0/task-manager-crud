@@ -1,139 +1,129 @@
-/* Fundo Geral Escuro */
+/* --- Fundo "All Black" --- */
 .login-container {
-    width: 100%;
     height: 100vh;
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #161930; /* Azul noturno bem escuro */
+    background-color: #131313; /* Preto absoluto */
     position: relative;
     overflow: hidden;
 }
 
-/* O Cartão de Vidro */
-.glass-card {
-    width: 90%;
-    max-width: 500px;
-    padding: 60px;
-    background: rgba(255, 255, 255, 0.05); /* Transparencia */
-    backdrop-filter: blur(15px); /* O Desfoque mágico */
-    -webkit-backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 20px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+/* --- Luzes Atmosféricas (Monocromáticas) --- */
+.orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px); /* Blur bem forte para parecer fumaça/luz */
+    z-index: 0;
+    opacity: 0.2; /* Bem sutil */
+    animation: floatOrb 12s infinite alternate ease-in-out;
+    pointer-events: none;
+}
+
+/* Orb 1: Luz Branca Superior (Era verde) */
+.orb-1 {
+    width: 350px; height: 350px;
+    background: #ffffff; /* Luz branca pura */
+    top: -80px; left: 10%;
+    opacity: 0.15; /* Um brilho fantasma */
+}
+
+/* Orb 2: Sombra Cinza Inferior */
+.orb-2 {
+    width: 450px; height: 450px;
+    background: #333333; /* Cinza chumbo */
+    bottom: -100px; right: -50px;
+    animation-delay: -5s;
+    opacity: 0.3;
+}
+
+@keyframes floatOrb {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(40px, 30px) scale(1.1); }
+}
+
+/* --- O Cartão de Vidro (Glassmorphism Noir) --- */
+.login-box {
+    position: relative;
     z-index: 10;
+    
+    /* Vidro escuro e elegante */
+    background: rgba(20, 20, 20, 0.4); /* Fundo levemente escuro */
+    backdrop-filter: blur(20px); /* O desfoque mágico */
+    -webkit-backdrop-filter: blur(20px);
+    
+    /* Bordas sutis em escala de cinza */
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-top: 1px solid rgba(255, 255, 255, 0.15); /* Reflexo superior */
+    border-bottom: 1px solid rgba(0, 0, 0, 0.5); /* Sombra inferior */
+    
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8); /* Sombra preta forte */
+    
+    padding: 3.5rem 3rem;
+    border-radius: 24px;
     text-align: center;
-    color: white;
+    width: 90%;
+    max-width: 420px;
+    color: #ffffff;
 }
 
 /* Tipografia */
-h2 { margin-bottom: 5px; font-weight: 600; }
-.highlight { color: #00ff99; } /* O verde do seu logo */
-.subtitle { font-size: 0.85rem; color: #aaa; margin-bottom: 30px; }
-
-/* Inputs Estilo Material (Linha embaixo) */
-.input-group {
-    position: relative;
-    margin-bottom: 25px;
-    text-align: left;
+h1 {
+    font-size: 2.8rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+    letter-spacing: -2px;
+    color: #ffffff;
+    /* Efeito sutil de brilho no texto */
+    text-shadow: 0 4px 20px rgba(255, 255, 255, 0.1);
 }
 
-.input-group input {
-    width: 100%;
-    padding: 10px 0;
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-    color: white;
-    outline: none;
+p {
+    color: #999; /* Cinza médio */
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    font-weight: 300;
+}
+
+.subtitle {
+    color: #666; /* Cinza mais escuro */
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+}
+
+/* Botão Google Minimalista */
+.google-btn {
+    background: rgba(255, 255, 255, 0.08);
+    color: #e0e0e0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 14px 24px;
     font-size: 1rem;
-    transition: border-color 0.3s;
-}
-
-.input-group input:focus {
-    border-bottom: 1px solid #00ff99;
-}
-
-/* Label Flutuante */
-.input-group label {
-    position: absolute;
-    top: 10px;
-    left: 0;
-    color: #aaa;
-    pointer-events: none;
-    transition: 0.3s ease all;
-    font-size: 1rem;
-}
-
-/* Efeito quando clica ou tem texto */
-.input-group input:focus ~ label,
-.input-group input:not(:placeholder-shown) ~ label {
-    top: -15px;
-    font-size: 0.8rem;
-    color: #00ff99;
-}
-
-.password-toggle {
-    position: absolute;
-    right: 0;
-    top: 10px;
-    cursor: pointer;
-    color: #aaa;
-}
-
-/* Botões */
-.btn-primary {
-    width: 100%;
-    padding: 12px;
-    background: linear-gradient(90deg, #00c6ff, #0072ff); /* Azul Cyan igual a foto */
-    border: none;
-    border-radius: 8px;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-    margin-top: 10px;
-    transition: transform 0.2s;
-}
-
-.btn-primary:hover { transform: scale(1.02); }
-
-.divider { margin: 20px 0; font-size: 0.8rem; color: #555; }
-
-.btn-google-glass {
-    width: 100%;
-    padding: 10px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 8px;
-    color: white;
+    border-radius: 12px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    transition: background 0.3s;
+    gap: 12px;
+    width: 100%;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    letter-spacing: 0.5px;
 }
-.btn-google-glass:hover { background: rgba(255, 255, 255, 0.2); }
 
-.footer-text { margin-top: 20px; font-size: 0.8rem; color: #aaa; }
-.footer-text a { color: #00c6ff; text-decoration: none; font-weight: bold; }
+/* Hover: Fica Branco com texto Preto (Alto Contraste) */
+.google-btn:hover {
+    background: #ffffff;
+    color: #0f0f0f;
+    border-color: #ffffff;
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.15); /* Glow branco */
+    transform: translateY(-2px);
+}
 
-/* Bolas de Luz (Background FX) */
-.glow-circle {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(80px);
-    z-index: 1;
-}
-.circle-1 {
-    width: 300px; height: 300px;
-    background: #eceef0;
-    top: -50px; left: -50px;
-    opacity: 0.4;
-}
-.circle-2 {
-    width: 250px; height: 250px;
-    background: #f0f3f2;
-    bottom: -50px; right: -50px;
-    opacity: 0.3;
+.login-hint {
+    margin-top: 2.5rem;
+    font-size: 0.75rem;
+    color: #444; /* Cinza bem escuro, quase sumindo */
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }

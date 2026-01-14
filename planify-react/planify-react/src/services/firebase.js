@@ -1,9 +1,9 @@
 // src/services/firebase.js
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider } from "firebase/auth";
+// 👇 AQUI ESTAVA O ERRO: Adicionei o 'signInWithPopup' na lista
+import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
-// --- COLE SUA FIREBASE CONFIG AQUI (A MESMA DO PROJETO ANTIGO) ---
 const firebaseConfig = {
   apiKey: "AIzaSyC_3_0I53wPsUx99OjIx1UvkIwOWBrW5pA",
   authDomain: "planify-aluizi0.firebaseapp.com",
@@ -15,6 +15,17 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+
 export const auth = getAuth(app);
-export const provider = new GoogleAuthProvider();
 export const db = getFirestore(app);
+
+export const signInWithGoogle = async () => {
+  const provider = new GoogleAuthProvider();
+  try {
+    const result = await signInWithPopup(auth, provider);
+    return result.user;
+  } catch (error) {
+    console.error("Erro ao logar com Google:", error);
+    throw error;
+  }
+};

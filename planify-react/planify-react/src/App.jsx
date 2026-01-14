@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { onAuthStateChanged, signOut } from "firebase/auth";
-import { auth } from "./services/firebase";
+// 👇 IMPORTANTE: Adicione o signInWithGoogle aqui
+import { auth, signInWithGoogle } from "./services/firebase"; 
 import { Login } from './pages/Login';
-import { Dashboard } from './pages/Dashboard'; // Importamos o novo Dashboard
+import { Dashboard } from './pages/Dashboard';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -16,17 +17,26 @@ function App() {
     return () => unsubscribe();
   }, []);
 
+  // 👇 Esta é a função que faltava!
+  const handleLogin = async () => {
+    try {
+      await signInWithGoogle();
+    } catch (error) {
+      console.error("Erro ao logar:", error);
+    }
+  };
+
   const handleLogout = () => {
     signOut(auth);
   };
 
-  if (loading) return <div className="loading-screen">Carregando...</div>;
+  if (loading) return <div className="loading-screen" style={{background: '#000', color: '#fff', height: '100vh', display:'flex', justifyContent:'center', alignItems:'center'}}>Carregando...</div>;
 
   return (
-    // Se tem usuário -> Dashboard. Se não -> Login.
-    <div style={{ background: '#0f172a', minHeight: '100vh' }}>
+    <div style={{ background: '#000000', minHeight: '100vh' }}>
       {!user ? (
-        <Login />
+        // 👇 AQUI ESTAVA O ERRO: Faltava passar o onLogin={handleLogin}
+        <Login onLogin={handleLogin} />
       ) : (
         <Dashboard user={user} onLogout={handleLogout} />
       )}
