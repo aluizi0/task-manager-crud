@@ -2,10 +2,13 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
-import "toastify-js/src/toastify.css"
+// Importe o Provider que criamos
+import { ToastProvider } from './components/ToastContext'; 
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <App />
+    <ToastProvider> {/* <--- Envolva o App aqui */}
+      <App />
+    </ToastProvider>
   </StrictMode>,
 )
